@@ -57,4 +57,23 @@ class Post {
         $stmt = self::connect()->prepare('DELETE FROM posts WHERE id = ?');
         return $stmt->execute([$id]);
     }
+    public static function searchByKeyword(string $term, int $limit = 50): array {
+        $pdo = self::connect();
+        // Match against posts.content and users.name (joined)
+        $q = '%' . str_replace(['%', '_'], ['\%', '\_'], $term) . '%';
+        $stmt = $pdo->prepare('
+        SELECT posts.*, users.name, users.email
+        FROM posts
+        JOIN users ON users.id = posts.user_id
+        WHERE posts.content LIKE ? OR users.name LIKE ?
+        ORDER BY posts.created_at DESC
+        LIMIT ?
+    ');
+        $stmt->bindValue(1, $q, PDO::PARAM_STR);
+        $stmt->bindValue(2, $q, PDO::PARAM_STR);
+        $stmt->bindValue(3, (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 }

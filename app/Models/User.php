@@ -29,4 +29,16 @@ class User {
         $stmt->execute([$name, $email, $password]);
         return (int)self::connect()->lastInsertId();
     }
+
+    public static function searchByName(string $term, int $limit = 50): array {
+        $pdo = self::connect();
+        // Use wildcard search, prepared statement to avoid injection
+        $q = '%' . str_replace(['%', '_'], ['\%', '\_'], $term) . '%';
+        $stmt = $pdo->prepare('SELECT id, name, email, created_at FROM users WHERE name LIKE ? ORDER BY name LIMIT ?');
+        $stmt->bindValue(1, $q, PDO::PARAM_STR);
+        $stmt->bindValue(2, (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 }

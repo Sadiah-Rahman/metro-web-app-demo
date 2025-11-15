@@ -41,20 +41,23 @@ $router->get('/dashboard', fn() => $dash->index());
 $router->post('/post', fn() => $post->create());
 
 // Edit post (show form & submit)
-$router->get('/post/edit', fn() => $post->editForm()); // expects ?id=...
+$router->get('/post/edit', fn() => $post->editForm());
 $router->post('/post/edit', fn() => $post->edit());
 
 // Delete post (prefer POST)
 $router->post('/post/delete', fn() => $post->delete());
-// Optional: support GET delete (not recommended; included for compatibility)
+// Optional GET delete
 $router->get('/post/delete', fn() => $post->delete());
+
+// Search (GET /search?type=users|posts&q=term)  ← FIXED
+$router->get('/search', fn() => $dash->search());
 
 // Auth actions
 $router->post('/register', fn() => $auth->register());
 $router->post('/login', fn() => $auth->login());
 $router->get('/logout', fn() => $auth->logout());
 
-// --- Dispatch (do not add routes after this line) ---
+// --- Dispatch (no routes should be added AFTER this line) ---
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');
 
 // Debug helper — uncomment if you need to log the exact path/method the router sees.
