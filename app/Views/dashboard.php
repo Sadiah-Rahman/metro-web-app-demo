@@ -16,6 +16,7 @@ $posts = Post::all();
             </form>
         </div>
 
+
         <!-- Recent posts -->
         <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
             <h3 class="text-lg font-semibold mb-4 text-gray-800">Recent Posts</h3>
