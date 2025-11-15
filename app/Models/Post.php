@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use PDO;
+use DateTime;
 
 class Post {
     private static function connect(): PDO {
@@ -18,9 +19,10 @@ class Post {
     }
 
     public static function create(int $user_id, string $content, ?string $image): int {
-        $stmt = self::connect()->prepare('INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)');
+        $pdo = self::connect();
+        $stmt = $pdo->prepare('INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)');
         $stmt->execute([$user_id, $content, $image]);
-        return (int)self::connect()->lastInsertId();
+        return (int)$pdo->lastInsertId();
     }
 
     public static function all(): array {
@@ -32,5 +34,27 @@ class Post {
         ');
         return $stmt->fetchAll();
     }
-}
 
+    public static function find(int $id): ?array {
+        $stmt = self::connect()->prepare('SELECT posts.*, users.name, users.email FROM posts JOIN users ON users.id = posts.user_id WHERE posts.id = ? LIMIT 1');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+    public static function update(int $id, string $content, ?string $image = null): bool {
+        $pdo = self::connect();
+        if ($image !== null) {
+            $stmt = $pdo->prepare('UPDATE posts SET content = ?, image = ?, edited_at = NOW() WHERE id = ?');
+            return $stmt->execute([$content, $image, $id]);
+        } else {
+            $stmt = $pdo->prepare('UPDATE posts SET content = ?, edited_at = NOW() WHERE id = ?');
+            return $stmt->execute([$content, $id]);
+        }
+    }
+
+    public static function delete(int $id): bool {
+        $stmt = self::connect()->prepare('DELETE FROM posts WHERE id = ?');
+        return $stmt->execute([$id]);
+    }
+}

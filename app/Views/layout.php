@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<script>
+    function confirmDelete(form){
+        return confirm('Are you sure you want to delete this post? This action cannot be undone.');
+    }
+</script>
+
 <body class="bg-gray-100 text-gray-900 min-h-screen">
 <div class="max-w-3xl mx-auto my-10 bg-white rounded-xl shadow-lg p-6">
     <header class="flex justify-between items-center mb-8 border-b pb-4">

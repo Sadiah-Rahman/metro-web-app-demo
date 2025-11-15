@@ -31,19 +31,31 @@ $auth = new AuthController();
 $dash = new DashboardController();
 $post = new PostController();
 
+// --- Register routes (ALL routes must be registered BEFORE dispatch) ---
 $router->get('/', fn() => $auth->showLogin());
 $router->get('/login', fn() => $auth->showLogin());
 $router->get('/register', fn() => $auth->showRegister());
 $router->get('/dashboard', fn() => $dash->index());
+
+// Create a post
 $router->post('/post', fn() => $post->create());
 
+// Edit post (show form & submit)
+$router->get('/post/edit', fn() => $post->editForm()); // expects ?id=...
+$router->post('/post/edit', fn() => $post->edit());
+
+// Delete post (prefer POST)
+$router->post('/post/delete', fn() => $post->delete());
+// Optional: support GET delete (not recommended; included for compatibility)
+$router->get('/post/delete', fn() => $post->delete());
+
+// Auth actions
 $router->post('/register', fn() => $auth->register());
 $router->post('/login', fn() => $auth->login());
 $router->get('/logout', fn() => $auth->logout());
 
+// --- Dispatch (do not add routes after this line) ---
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');
 
-
-
-
-
+// Debug helper — uncomment if you need to log the exact path/method the router sees.
+// error_log('ROUTER DEBUG: ' . ($_SERVER['REQUEST_METHOD'] ?? 'GET') . ' ' . ($_SERVER['REQUEST_URI'] ?? '/'));
