@@ -76,4 +76,13 @@ class Post {
         return $stmt->fetchAll();
     }
 
+    public static function findById(int $id): ?array {
+        $stmt = self::connect()->prepare('SELECT id, name, email, bio, avatar, created_at FROM users WHERE id = ? LIMIT 1');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+
+
 }

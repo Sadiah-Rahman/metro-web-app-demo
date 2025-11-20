@@ -23,6 +23,11 @@ use App\Core\Session;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\PostController;
+use App\Controllers\UserController;
+
+
+
+
 
 Session::start();
 
@@ -30,6 +35,8 @@ $router = new Router();
 $auth = new AuthController();
 $dash = new DashboardController();
 $post = new PostController();
+$userCtrl = new UserController();
+
 
 // --- Register routes (ALL routes must be registered BEFORE dispatch) ---
 $router->get('/', fn() => $auth->showLogin());
@@ -56,6 +63,12 @@ $router->get('/search', fn() => $dash->search());
 $router->post('/register', fn() => $auth->register());
 $router->post('/login', fn() => $auth->login());
 $router->get('/logout', fn() => $auth->logout());
+$router->get('/user', fn() => $userCtrl->profile());         // view profile: /user?id=123
+$router->post('/user/follow', fn() => $userCtrl->follow()); // follow action
+$router->post('/user/unfollow', fn() => $userCtrl->unfollow()); // unfollow action
+// show edit form & update profile (owner only)
+$router->get('/user/edit', fn() => $userCtrl->editForm());
+$router->post('/user/edit', fn() => $userCtrl->updateProfile());
 
 // --- Dispatch (no routes should be added AFTER this line) ---
 $router->dispatch($_SERVER['REQUEST_URI'] ?? '/', $_SERVER['REQUEST_METHOD'] ?? 'GET');

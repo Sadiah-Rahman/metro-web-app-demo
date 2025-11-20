@@ -3,19 +3,7 @@ $title = 'Search | AuthBoard';
 ob_start();
 ?>
     <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl font-semibold mb-4 text-blue-700">Search</h2>
 
-        <form method="GET" action="/search" class="flex gap-2 mb-6">
-            <input type="text" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="Search users or posts..."
-                   class="flex-1 border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500" />
-
-            <select name="type" class="border border-gray-300 rounded-md p-2">
-                <option value="posts" <?= $type === 'posts' ? 'selected' : '' ?>>Posts</option>
-                <option value="users" <?= $type === 'users' ? 'selected' : '' ?>>Users</option>
-            </select>
-
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">Search</button>
-        </form>
 
         <?php if ($q === ''): ?>
             <p class="text-gray-500">Enter a search term to begin.</p>

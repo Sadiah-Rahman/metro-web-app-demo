@@ -68,11 +68,26 @@ ob_start();
                     <div class="p-5 flex gap-4">
 
                         <!-- Avatar -->
+                        <!-- Avatar -->
                         <div class="flex-shrink-0">
-                            <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-lg">
-                                <?= htmlspecialchars($avatarText) ?>
-                            </div>
+                            <a href="/user?id=<?= htmlspecialchars($p['user_id']) ?>">
+                                <?php if (!empty($p['avatar'])): ?>
+                                    <img src="<?= htmlspecialchars($p['avatar']) ?>" alt="avatar" class="w-12 h-12 rounded-full object-cover">
+                                <?php else: ?>
+                                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-lg">
+                                        <?= htmlspecialchars($avatarText) ?>
+                                    </div>
+                                <?php endif; ?>
+                            </a>
                         </div>
+
+                        <!-- Name should also link -->
+<!--                        <p class="font-semibold text-gray-900">-->
+<!--                            <a href="/user?id=--><?php //= htmlspecialchars($p['user_id']) ?><!--" class="hover:underline">-->
+<!--                                --><?php //= htmlspecialchars($p['name']) ?>
+<!--                            </a>-->
+<!--                        </p>-->
+
 
                         <!-- Main Post Content -->
                         <div class="flex-1">
@@ -98,7 +113,7 @@ ob_start();
                                         <?php if ($canEdit): ?>
                                             <a href="/post/edit?id=<?= htmlspecialchars($p['id']) ?>"
                                                class="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md">
-                                                ✏️ Edit
+                                                Edit
                                             </a>
                                         <?php endif; ?>
 
@@ -107,7 +122,7 @@ ob_start();
                                             <input type="hidden" name="id" value="<?= htmlspecialchars($p['id']) ?>">
                                             <button type="submit"
                                                     class="inline-flex items-center px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md">
-                                                🗑️ Delete
+                                                Delete
                                             </button>
                                         </form>
 
